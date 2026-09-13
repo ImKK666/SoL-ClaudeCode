@@ -33,6 +33,8 @@ const LEDGER = join(HERE, "logs", "gateway.jsonl");
 const TRAJECTORY = join(HERE, "logs", "trajectory.jsonl");
 const TOKENS = join(HERE, "logs", "tokens.jsonl");
 const DRY_RUN = process.env.SOLCLAUDECODE_DRY_RUN === "1";
+/** Baseline arm for A/B: relay /v1/messages verbatim but still meter usage. */
+const DISABLE_PROJECTION = process.env.SOLCLAUDECODE_DISABLE_PROJECTION === "1";
 /** Set SOLCLAUDECODE_KEEP_ENCODING=1 to stop forcing identity (keeps gzip/br, loses usage accounting). */
 const KEEP_ENCODING = process.env.SOLCLAUDECODE_KEEP_ENCODING === "1";
 
@@ -196,7 +198,7 @@ server.on("connect", (req, clientSocket, head) => {
 		// Only real generations. `/v1/messages/count_tokens` shares the prefix but
 		// must not consume ObservationPack send counts or be rewritten.
 		const isMessages = request.target === "/v1/messages" || request.target.startsWith("/v1/messages?");
-		const projectable = request.method === "POST" && isMessages && !request.chunked && request.body;
+		const projectable = !DISABLE_PROJECTION && request.method === "POST" && isMessages && !request.chunked && request.body;
 		const headers = request.body !== null && !KEEP_ENCODING ? withIdentity(request.headers) : request.headers;
 		const forward = (body) => writeUp(request.body !== null ? serializeRequest({ ...request, headers }, body) : request.raw);
 

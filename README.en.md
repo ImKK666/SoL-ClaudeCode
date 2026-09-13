@@ -204,6 +204,20 @@ each situation behaves:
 | `SOLCLAUDECODE_MAX_OBSERVATIONS` | 5000 | LRU cap on observations per session |
 | `SOLCLAUDECODE_GC_DAYS` | 14 | age for `npm run gc` |
 
+### A/B comparison (real Claude Code, 12-turn session, N=5)
+
+Same task, same clean workspace, gateway off vs on (off = account only, no projection):
+
+| Metric | Gateway off | Gateway on | Difference |
+|---|---|---|---|
+| Total tokens (mean) | 756,463 | 479,142 | **−36.7%** |
+| Cost (mean, sample pricing) | $1.647 | $1.282 | **−22.2%** |
+
+Task: read three ~150 KB files plus nine follow-up tool calls (12 requests). The off
+arm has wide variance (610k–976k tokens); the median-based figures are −29.0%
+tokens / −25.1% cost. Cost uses sample pricing $15/$75 (cache read $1.5 / write
+$18.75). Reproduce with `./scripts/bench-ab.sh 5`.
+
 ## Tests
 
 ```bash
