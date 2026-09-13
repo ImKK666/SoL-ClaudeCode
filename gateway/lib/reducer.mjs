@@ -6,11 +6,11 @@
  * when validateReceipt proves its quotes against the archive. Any miss returns
  * undefined, leaving the block for the ObservationPack path (or untouched).
  *
- * Providers (SOLPI_REDUCER_PROVIDER):
+ * Providers (SOLCLAUDECODE_REDUCER_PROVIDER):
  *   none      default — mechanism off, zero cost.
- *   command   run SOLPI_REDUCER_COMMAND; it reads the reducer input on stdin and
+ *   command   run SOLCLAUDECODE_REDUCER_COMMAND; it reads the reducer input on stdin and
  *             prints the receipt JSON on stdout. No credentials involved.
- *   openai    OpenAI-compatible chat completions (SOLPI_REDUCER_BASE_URL/_KEY/_MODEL).
+ *   openai    OpenAI-compatible chat completions (SOLCLAUDECODE_REDUCER_BASE_URL/_KEY/_MODEL).
  *   anthropic Opt-in. Reuses the intercepted request's Authorization header and
  *             calls a small Claude model as the reducer. This spends the same
  *             subscription the user is already spending; enable deliberately.
@@ -61,18 +61,18 @@ const DEFAULT_OPENAI_MODEL = "gpt-4o-mini";
 
 /** @param {Record<string,string|undefined>} [env] */
 export function loadReducerConfig(env = process.env) {
-	const provider = env.SOLPI_REDUCER_PROVIDER || "none";
+	const provider = env.SOLCLAUDECODE_REDUCER_PROVIDER || "none";
 	return {
 		provider,
 		model:
 			provider === "anthropic"
-				? env.SOLPI_REDUCER_MODEL || DEFAULT_ANTHROPIC_MODEL
-				: env.SOLPI_REDUCER_MODEL || DEFAULT_OPENAI_MODEL,
-		command: env.SOLPI_REDUCER_COMMAND || "",
-		baseUrl: (env.SOLPI_REDUCER_BASE_URL || "https://api.openai.com/v1").replace(/\/+$/, ""),
-		apiKey: env.SOLPI_REDUCER_API_KEY || "",
-		maxOutputTokens: Number(env.SOLPI_REDUCER_MAX_OUTPUT_TOKENS || DEFAULT_MAX_OUTPUT_TOKENS),
-		timeoutMs: Number(env.SOLPI_REDUCER_TIMEOUT_MS || DEFAULT_TIMEOUT_MS),
+				? env.SOLCLAUDECODE_REDUCER_MODEL || DEFAULT_ANTHROPIC_MODEL
+				: env.SOLCLAUDECODE_REDUCER_MODEL || DEFAULT_OPENAI_MODEL,
+		command: env.SOLCLAUDECODE_REDUCER_COMMAND || "",
+		baseUrl: (env.SOLCLAUDECODE_REDUCER_BASE_URL || "https://api.openai.com/v1").replace(/\/+$/, ""),
+		apiKey: env.SOLCLAUDECODE_REDUCER_API_KEY || "",
+		maxOutputTokens: Number(env.SOLCLAUDECODE_REDUCER_MAX_OUTPUT_TOKENS || DEFAULT_MAX_OUTPUT_TOKENS),
+		timeoutMs: Number(env.SOLCLAUDECODE_REDUCER_TIMEOUT_MS || DEFAULT_TIMEOUT_MS),
 	};
 }
 
@@ -139,7 +139,7 @@ async function callAnthropicProvider(config, input, headers) {
 }
 
 async function callOpenAiProvider(config, input) {
-	if (!config.apiKey) return { ok: false, outputText: "", provider: "openai", model: config.model, totalTokens: 0, errorMessage: "SOLPI_REDUCER_API_KEY is not set" };
+	if (!config.apiKey) return { ok: false, outputText: "", provider: "openai", model: config.model, totalTokens: 0, errorMessage: "SOLCLAUDECODE_REDUCER_API_KEY is not set" };
 	try {
 		const json = await fetchJson(
 			`${config.baseUrl}/chat/completions`,

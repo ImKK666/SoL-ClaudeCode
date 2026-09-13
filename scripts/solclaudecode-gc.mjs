@@ -4,8 +4,8 @@
  * The content-addressed archive never deletes itself, so a long-lived gateway
  * grows without bound. Remove objects older than N days (default 14):
  *
- *   node scripts/solpi-gc.mjs [days]
- *   SOLPI_GC_DAYS=30 node scripts/solpi-gc.mjs
+ *   node scripts/solclaudecode-gc.mjs [days]
+ *   SOLCLAUDECODE_GC_DAYS=30 node scripts/solclaudecode-gc.mjs
  *
  * Only archived tool results and reduced logs are touched — no configuration.
  */
@@ -14,7 +14,7 @@ import { readdirSync, statSync, unlinkSync } from "node:fs";
 import { join } from "node:path";
 import { archiveRoot } from "../shared/observation-pack.mjs";
 
-const days = Number(process.argv[2] || process.env.SOLPI_GC_DAYS || 14);
+const days = Number(process.argv[2] || process.env.SOLCLAUDECODE_GC_DAYS || 14);
 const cutoff = Date.now() - days * 86_400_000;
 const root = archiveRoot();
 

@@ -1,4 +1,4 @@
-// SoL-Pi gateway — MITM probe / foundation (read-only, verbatim forwarding)
+// SoL-ClaudeCode gateway — MITM probe / foundation (read-only, verbatim forwarding)
 //
 // Purpose: answer one binary question — does the Claude Code (native Bun) client
 // accept a locally-trusted CA for api.anthropic.com, or is there certificate
@@ -36,9 +36,9 @@ const LISTEN_PORT = Number(process.argv[2] || 8788);
 const TARGET_HOST = "api.anthropic.com";
 const TARGET_PORT = 443;
 const LOG = join(HERE, "logs", "probe.log");
-// Optional: when SOLPI_CAPTURE is set to a path, dump each connection's decrypted
+// Optional: when SOLCLAUDECODE_CAPTURE is set to a path, dump each connection's decrypted
 // client->upstream bytes (credential headers redacted) there for offline analysis.
-const CAPTURE = process.env.SOLPI_CAPTURE || "";
+const CAPTURE = process.env.SOLCLAUDECODE_CAPTURE || "";
 
 const key = readFileSync(join(HERE, "ca", "leaf.key"));
 const cert = readFileSync(join(HERE, "ca", "leaf.pem"));

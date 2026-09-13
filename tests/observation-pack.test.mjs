@@ -50,7 +50,7 @@ test("placeholder is stable, references the id, and is far smaller", () => {
 test("ineligible tool results are rejected", () => {
 	assert.equal(buildObservation({ type: "tool_result", tool_use_id: "t2", content: "tiny" }, "Read"), undefined);
 	assert.equal(buildObservation({ type: "tool_result", tool_use_id: "t3", content: big, is_error: true }, "Bash"), undefined);
-	assert.equal(buildObservation({ type: "tool_result", tool_use_id: "t4", content: "[obs_recall id=x] ..." }, "mcp__sol-pi__obs_recall"), undefined);
+	assert.equal(buildObservation({ type: "tool_result", tool_use_id: "t4", content: "[obs_recall id=x] ..." }, "mcp__sol-claudecode__obs_recall"), undefined);
 });
 
 test("projector sends full for FULL_SENDS then packs, and is fail-open", async () => {

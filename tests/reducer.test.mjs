@@ -30,9 +30,9 @@ function bodyFor(command, isError) {
 
 test("reduces a failing diagnostic log to a verified receipt", async () => {
 	rmSync(root, { recursive: true, force: true });
-	process.env.SOLPI_HOME = root;
-	process.env.SOLPI_REDUCER_PROVIDER = "command";
-	process.env.SOLPI_REDUCER_COMMAND = `node ${fixture}`;
+	process.env.SOLCLAUDECODE_HOME = root;
+	process.env.SOLCLAUDECODE_REDUCER_PROVIDER = "command";
+	process.env.SOLCLAUDECODE_REDUCER_COMMAND = `node ${fixture}`;
 
 	const { createProjector } = await import("../gateway/lib/project.mjs");
 	const projector = createProjector(root);

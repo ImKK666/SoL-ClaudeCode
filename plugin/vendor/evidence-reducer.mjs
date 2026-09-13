@@ -1,5 +1,5 @@
 /*
- * SoL-Pi for Claude Code — Evidence-Preserving Reducer core (shared contract).
+ * SoL-ClaudeCode — Evidence-Preserving Reducer core (shared contract).
  *
  * Port of NVIDIA SoL-Pi's evidence-preserving-reducer (src/sol-pi/extensions/
  * evidence-preserving-reducer/*). A long diagnostic log is archived, sent
@@ -22,7 +22,7 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { archiveRoot } from "./observation-pack.mjs";
 
-export const REDUCER_RECEIPT_SCHEMA = "sol-pi-evidence-receipt/1";
+export const REDUCER_RECEIPT_SCHEMA = "sol-claudecode-evidence-receipt/1";
 export const REDUCER_RECEIPT_PREFIX = "sol_pi_evidence_receipt_v1";
 
 export const MAX_EVIDENCE_ITEMS = 12;

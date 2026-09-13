@@ -1,4 +1,4 @@
-// SoL-Pi gateway for Claude Code — wire layer.
+// SoL-ClaudeCode gateway for Claude Code — wire layer.
 //
 // Terminates Claude Code's TLS to api.anthropic.com (keeping the host identity
 // so first-party features stay on), then applies SoL-Pi's ObservationPack
@@ -10,7 +10,7 @@
 // original bytes, so a bug here can never corrupt a paid session.
 //
 // Run:  node gateway/gateway.mjs [listenPort]
-// Env:  SOLPI_HOME (archive root)   SOLPI_DRY_RUN=1 (log, never rewrite)
+// Env:  SOLCLAUDECODE_HOME (archive root)   SOLCLAUDECODE_DRY_RUN=1 (log, never rewrite)
 
 import { createServer } from "node:http";
 import { connect as netConnect } from "node:net";
@@ -32,9 +32,9 @@ const LOG = join(HERE, "logs", "gateway.log");
 const LEDGER = join(HERE, "logs", "gateway.jsonl");
 const TRAJECTORY = join(HERE, "logs", "trajectory.jsonl");
 const TOKENS = join(HERE, "logs", "tokens.jsonl");
-const DRY_RUN = process.env.SOLPI_DRY_RUN === "1";
-/** Set SOLPI_KEEP_ENCODING=1 to stop forcing identity (keeps gzip/br, loses usage accounting). */
-const KEEP_ENCODING = process.env.SOLPI_KEEP_ENCODING === "1";
+const DRY_RUN = process.env.SOLCLAUDECODE_DRY_RUN === "1";
+/** Set SOLCLAUDECODE_KEEP_ENCODING=1 to stop forcing identity (keeps gzip/br, loses usage accounting). */
+const KEEP_ENCODING = process.env.SOLCLAUDECODE_KEEP_ENCODING === "1";
 
 const key = readFileSync(join(HERE, "ca", "leaf.key"));
 const cert = readFileSync(join(HERE, "ca", "leaf.pem"));
@@ -302,7 +302,7 @@ server.on("connect", (req, clientSocket, head) => {
 		upstreamTls.on("error", (e) => { log(`UPSTREAM_TLS_FAIL ${e.code || e.message}`); clientTls.destroy(); });
 		let responseBytes = 0;
 		let respHeadLogged = false;
-		const respDump = process.env.SOLPI_RESP_DUMP || "";
+		const respDump = process.env.SOLCLAUDECODE_RESP_DUMP || "";
 		const recordUsage = (usage) => {
 			if (!usage || usageRecorded) return;
 			usageRecorded = true;
@@ -335,12 +335,12 @@ server.on("connect", (req, clientSocket, head) => {
 
 server.on("error", (e) => {
 	log(`[server] ${e.message}`);
-	// A concurrent `solpi` won the race for the port; this instance has no job.
+	// A concurrent `solclaudecode` won the race for the port; this instance has no job.
 	if (e.code === "EADDRINUSE") process.exit(1);
 });
 server.listen(LISTEN_PORT, "127.0.0.1", () => {
 	log(`[boot] gateway on 127.0.0.1:${LISTEN_PORT}${DRY_RUN ? " (DRY RUN)" : ""}`);
 	log(`[boot] settings: ${sources.join(", ") || "(none)"}`);
 	log(`[boot] upstream: ${upstream.url ? `${maskAuth(upstream.url)} (${upstream.source})` : "DIRECT"}`);
-	log(`[boot] archive root: ${process.env.SOLPI_HOME || "~/.sol-pi"}`);
+	log(`[boot] archive root: ${process.env.SOLCLAUDECODE_HOME || "~/.sol-claudecode"}`);
 });

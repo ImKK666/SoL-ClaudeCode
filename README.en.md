@@ -1,4 +1,4 @@
-# SoL-Pi for Claude Code
+# SoL-ClaudeCode
 
 **English** | [简体中文](./README.md)
 
@@ -60,20 +60,20 @@ tests/                      node:test suites (npm test)
 
 ```bash
 ./install.sh        # vendors the shared contract, makes the CA, registers the plugin
-./bin/solpi         # minimal launch: starts the gateway if down, runs claude through it
-./bin/solpi -p "…"  # one-shot
+./bin/solclaudecode         # minimal launch: starts the gateway if down, runs claude through it
+./bin/solclaudecode -p "…"  # one-shot
 ```
 
-`install.sh` registers a local marketplace and installs `sol-pi@sol-pi`. It is
+`install.sh` registers a local marketplace and installs `sol-claudecode@sol-claudecode`. It is
 reversible:
 
 ```bash
-claude plugin uninstall sol-pi@sol-pi
-claude plugin marketplace remove sol-pi
+claude plugin uninstall sol-claudecode@sol-claudecode
+claude plugin marketplace remove sol-claudecode
 ```
 
-Add `bin/` to `PATH` for a bare `solpi`. `bin/solpi` brings the gateway up on
-`127.0.0.1:${SOLPI_GATEWAY_PORT:-8789}` and exports `NODE_EXTRA_CA_CERTS` +
+Add `bin/` to `PATH` for a bare `solclaudecode`. `bin/solclaudecode` brings the gateway up on
+`127.0.0.1:${SOLCLAUDECODE_GATEWAY_PORT:-8789}` and exports `NODE_EXTRA_CA_CERTS` +
 `HTTPS_PROXY`, so no manual env juggling.
 
 ## Manual run
@@ -105,7 +105,7 @@ injects.
 | **ObservationPack** | gateway (projection) + plugin (`obs_recall`) | ✅ implemented, end-to-end verified |
 | **Evidence-Preserving Reducer** | gateway (projection) | ✅ implemented, opt-in provider |
 | **Trajectory Inspector** | gateway | ✅ metadata-only JSONL (`gateway/logs/trajectory.jsonl`) |
-| **Action Fusion** | plugin (PostToolUse hook) | ✅ opt-in (`SOLPI_FUSION_COMMAND`) |
+| **Action Fusion** | plugin (PostToolUse hook) | ✅ opt-in (`SOLCLAUDECODE_FUSION_COMMAND`) |
 | **Online Context Compact** | — | ⛔ not faithfully portable (see below) |
 
 **Why Online Context Compact is not ported.** SoL-Pi calls Pi's native
@@ -129,12 +129,12 @@ Every request and response is metered to `gateway/logs/tokens.jsonl`:
 Report (prices are yours to supply — nothing is hardcoded):
 
 ```bash
-SOLPI_PRICE_IN=15 SOLPI_PRICE_OUT=75 node scripts/token-report.mjs
+SOLCLAUDECODE_PRICE_IN=15 SOLCLAUDECODE_PRICE_OUT=75 node scripts/token-report.mjs
 ```
 
 To read usage, the gateway asks upstream for `Accept-Encoding: identity` (the
 `/v1/messages` reply is otherwise gzip'd SSE, opaque to the scanner). Set
-`SOLPI_KEEP_ENCODING=1` to preserve compression and give up usage accounting.
+`SOLCLAUDECODE_KEEP_ENCODING=1` to preserve compression and give up usage accounting.
 
 Because most of a warm session is served as **cache reads** (billed at ~10% of
 input), the money saved is smaller than the raw token reduction — measure it, do
@@ -150,15 +150,15 @@ not assume it. The report prints two cost views:
 
 | Variable | Default | Meaning |
 |---|---|---|
-| `SOLPI_HOME` | `~/.sol-pi` | archive root (shared by gateway and plugin) |
-| `SOLPI_FULL_SENDS` | `2` | requests a large result is sent in full before packing |
-| `SOLPI_DRY_RUN` | unset | log mutations without applying them |
-| `SOLPI_KEEP_ENCODING` | unset | `1` keeps upstream gzip/br (disables usage accounting) |
-| `SOLPI_REDUCER_PROVIDER` | `none` | `none` \| `command` \| `openai` \| `anthropic` |
-| `SOLPI_REDUCER_COMMAND` | — | for `command`: reads reducer input on stdin, prints receipt JSON |
-| `SOLPI_REDUCER_BASE_URL` / `_API_KEY` / `_MODEL` | — | for `openai` |
-| `SOLPI_REDUCER_MAX_OUTPUT_TOKENS` / `_TIMEOUT_MS` | 2048 / 90000 | reducer limits |
-| `SOLPI_FUSION_COMMAND` | unset | Action Fusion follow-up command after Edit/Write |
+| `SOLCLAUDECODE_HOME` | `~/.sol-claudecode` | archive root (shared by gateway and plugin) |
+| `SOLCLAUDECODE_FULL_SENDS` | `2` | requests a large result is sent in full before packing |
+| `SOLCLAUDECODE_DRY_RUN` | unset | log mutations without applying them |
+| `SOLCLAUDECODE_KEEP_ENCODING` | unset | `1` keeps upstream gzip/br (disables usage accounting) |
+| `SOLCLAUDECODE_REDUCER_PROVIDER` | `none` | `none` \| `command` \| `openai` \| `anthropic` |
+| `SOLCLAUDECODE_REDUCER_COMMAND` | — | for `command`: reads reducer input on stdin, prints receipt JSON |
+| `SOLCLAUDECODE_REDUCER_BASE_URL` / `_API_KEY` / `_MODEL` | — | for `openai` |
+| `SOLCLAUDECODE_REDUCER_MAX_OUTPUT_TOKENS` / `_TIMEOUT_MS` | 2048 / 90000 | reducer limits |
+| `SOLCLAUDECODE_FUSION_COMMAND` | unset | Action Fusion follow-up command after Edit/Write |
 
 The reducer is **off by default**. The `anthropic` provider reuses the intercepted
 request's `Authorization` header to make a nested model call — it spends the same
@@ -170,8 +170,8 @@ Observation ids embed the content hash, so the archive is content-addressed and 
 gateway (writer) and plugin (reader) need no session key to meet at the same object.
 
 ```
-$SOLPI_HOME/observation-pack/objects/<obs_id>.txt        # 0600
-$SOLPI_HOME/evidence-preserving-reducer/objects/<hh>/<sha>.txt
+$SOLCLAUDECODE_HOME/observation-pack/objects/<obs_id>.txt        # 0600
+$SOLCLAUDECODE_HOME/evidence-preserving-reducer/objects/<hh>/<sha>.txt
 ```
 
 Observation id: `obs_` + `sha256(toolName \0 toolCallId \0 contentHash)[:24]`.
@@ -192,17 +192,17 @@ each situation behaves:
 
 | Situation | Behavior |
 |---|---|
-| **Many `claude` at once** | One gateway serves them all. Counters are keyed by `X-Claude-Code-Session-Id`, so sessions never interfere. `bin/solpi` reuses a running gateway instead of starting a second one. |
-| **Concurrent `solpi` launches** | Only one gateway can bind the port; the loser gets `EADDRINUSE` and exits cleanly, while the launcher waits for the port and proceeds. |
+| **Many `claude` at once** | One gateway serves them all. Counters are keyed by `X-Claude-Code-Session-Id`, so sessions never interfere. `bin/solclaudecode` reuses a running gateway instead of starting a second one. |
+| **Concurrent `solclaudecode` launches** | Only one gateway can bind the port; the loser gets `EADDRINUSE` and exits cleanly, while the launcher waits for the port and proceeds. |
 | **Fork / branch** | A fork has a new session id, so its grace period starts fresh. Placeholders inherited from the parent stay recallable because the archive is **content-addressed and global**, not session-scoped. |
 | **Subagents / agent teams** | Requests carry their own session id; if a subagent shares its parent's id and runs in parallel, projection for that session is **serialized** so the send counters cannot race. |
 | **Missing session header** | Falls back to a per-connection key, so unrelated requests never share one counter bucket. |
-| **Memory over a long run** | Session/observation counters are LRU-bounded (`SOLPI_MAX_SESSIONS`, `SOLPI_MAX_OBSERVATIONS`). |
-| **Archive growth** | `npm run gc` (or `node scripts/solpi-gc.mjs [days]`) deletes archived objects older than 14 days. |
+| **Memory over a long run** | Session/observation counters are LRU-bounded (`SOLCLAUDECODE_MAX_SESSIONS`, `SOLCLAUDECODE_MAX_OBSERVATIONS`). |
+| **Archive growth** | `npm run gc` (or `node scripts/solclaudecode-gc.mjs [days]`) deletes archived objects older than 14 days. |
 
-| `SOLPI_MAX_SESSIONS` | 2000 | LRU cap on tracked sessions |
-| `SOLPI_MAX_OBSERVATIONS` | 5000 | LRU cap on observations per session |
-| `SOLPI_GC_DAYS` | 14 | age for `npm run gc` |
+| `SOLCLAUDECODE_MAX_SESSIONS` | 2000 | LRU cap on tracked sessions |
+| `SOLCLAUDECODE_MAX_OBSERVATIONS` | 5000 | LRU cap on observations per session |
+| `SOLCLAUDECODE_GC_DAYS` | 14 | age for `npm run gc` |
 
 ## Tests
 

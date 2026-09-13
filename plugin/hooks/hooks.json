@@ -1,5 +1,5 @@
 {
-  "description": "SoL-Pi for Claude Code — ObservationPack gateway health check, plus optional Action Fusion after edits",
+  "description": "SoL-ClaudeCode — ObservationPack gateway health check, plus optional Action Fusion after edits",
   "hooks": {
     "SessionStart": [
       {

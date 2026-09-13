@@ -27,7 +27,7 @@ gateway/     MITM 网关：HTTP/1.1 解析、投影、归档、记账、轨迹
 plugin/      Claude Code 插件（自包含）：obs_recall MCP、hooks、命令
 scripts/     vendor 同步 / 记账报告 / 归档 GC
 tests/       node:test（20 条）
-bin/solpi    极简启动器
+bin/solclaudecode    极简启动器
 install.sh   一键安装
 ```
 
@@ -41,15 +41,15 @@ install.sh   一键安装
 
 ```bash
 ./install.sh        # 生成 CA + 注册 marketplace + 安装插件
-./bin/solpi         # 最小启动：网关没起就自动拉起，再跑 claude
-./bin/solpi -p "…"  # 一次性
+./bin/solclaudecode         # 最小启动：网关没起就自动拉起，再跑 claude
+./bin/solclaudecode -p "…"  # 一次性
 ```
 
-把 `bin/` 加进 `PATH`，就能一个词启动（`solpi`）。卸载：
+把 `bin/` 加进 `PATH`，就能一个词启动（`solclaudecode`）。卸载：
 
 ```bash
-claude plugin uninstall sol-pi@sol-pi
-claude plugin marketplace remove sol-pi
+claude plugin uninstall sol-claudecode@sol-claudecode
+claude plugin marketplace remove sol-claudecode
 ```
 
 ## 机制
@@ -117,16 +117,16 @@ npm test  →  20/20 通过
 
 ## 安全
 
-- 网关对上游请求**归一 `Accept-Encoding: identity`**（否则 `/v1/messages` 是 gzip 的 SSE，读不到 usage）。想保留压缩：`SOLPI_KEEP_ENCODING=1`。
+- 网关对上游请求**归一 `Accept-Encoding: identity`**（否则 `/v1/messages` 是 gzip 的 SSE，读不到 usage）。想保留压缩：`SOLCLAUDECODE_KEEP_ENCODING=1`。
 - 日志里 `Authorization` / `x-api-key` / `Cookie` **一律脱敏**，绝不落盘。
 - CA 本地生成、经 `NODE_EXTRA_CA_CERTS` 传入、**从不进系统信任库**；收工 `rm -rf gateway/ca` 即撤销。
-- 归档含工具原文，`0600` 权限、放在 `~/.sol-pi`，别进版本库。
+- 归档含工具原文，`0600` 权限、放在 `~/.sol-claudecode`，别进版本库。
 
 ## 已知边界
 
 - 归档的是**客户端截断后**的字节（Claude Code 的 Read 会先自行截断），网关只能打包它实际收到的。
 - 召回单页约 16 KB，大文件需要多次翻页。
-- Reducer 的 `anthropic` provider 会**复用拦截到的订阅令牌**做嵌套模型调用——默认关闭，需显式启用（`SOLPI_REDUCER_PROVIDER=anthropic`）。
+- Reducer 的 `anthropic` provider 会**复用拦截到的订阅令牌**做嵌套模型调用——默认关闭，需显式启用（`SOLCLAUDECODE_REDUCER_PROVIDER=anthropic`）。
 
 ## 开发
 
@@ -134,7 +134,7 @@ npm test  →  20/20 通过
 npm test                          # node --test tests/*.test.mjs
 npm run vendor                    # 把 shared/ 同步进 plugin/vendor/
 npm run gc                        # 清理 14 天前的归档
-node scripts/token-report.mjs     # 生成记账报告（可传 SOLPI_PRICE_* 单价）
+node scripts/token-report.mjs     # 生成记账报告（可传 SOLCLAUDECODE_PRICE_* 单价）
 ```
 
 ## 社区

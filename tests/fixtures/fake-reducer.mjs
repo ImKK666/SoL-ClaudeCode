@@ -8,7 +8,7 @@ const log = input.split("<untrusted_log>\n")[1]?.split("\n</untrusted_log>")[0] 
 const quote = log.split("\n").find((line) => /error/i.test(line)) ?? log.split("\n")[0] ?? "x";
 process.stdout.write(
 	JSON.stringify({
-		schema: "sol-pi-evidence-receipt/1",
+		schema: "sol-claudecode-evidence-receipt/1",
 		source_sha256: hash,
 		status: isError ? "failure" : "success",
 		uncertain: false,

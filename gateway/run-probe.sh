@@ -2,7 +2,7 @@
 # Drive one real Claude Code request through the local MITM probe.
 #
 # The probe must already be running (in another terminal):
-#     tmux new-session -d -s solpi-probe \
+#     tmux new-session -d -s solclaudecode-probe \
 #       "node gateway/mitm-probe.mjs 8788 2>&1 | tee gateway/logs/probe.stdout.log"
 #
 # Launch contract (verified 2026-09-13):

@@ -1,12 +1,12 @@
 /*
- * SoL-Pi MCP server — the harness-side half of ObservationPack.
+ * SoL-ClaudeCode MCP server — the harness-side half of ObservationPack.
  *
  * Exposes one tool, `obs_recall`, which reads the content-addressed archive the
  * wire gateway writes. It is a deliberately minimal stdio JSON-RPC server (new
  * line delimited), so it needs no SDK at runtime.
  *
  * Shared contract: ../../shared/observation-pack.mjs (same module the gateway
- * imports). The archive root is SOLPI_HOME or ~/.sol-pi.
+ * imports). The archive root is SOLCLAUDECODE_HOME or ~/.sol-claudecode.
  */
 
 import { createInterface } from "node:readline";
@@ -95,7 +95,7 @@ async function recall(args) {
 async function handle(message) {
 	const { id, method, params } = message;
 	if (method === "initialize") {
-		return { jsonrpc: "2.0", id, result: { protocolVersion: PROTOCOL_VERSION, capabilities: { tools: {} }, serverInfo: { name: "sol-pi", version: "0.1.0" } } };
+		return { jsonrpc: "2.0", id, result: { protocolVersion: PROTOCOL_VERSION, capabilities: { tools: {} }, serverInfo: { name: "sol-claudecode", version: "0.1.0" } } };
 	}
 	if (method === "notifications/initialized" || method === "initialized") return null;
 	if (method === "ping") return { jsonrpc: "2.0", id, result: {} };

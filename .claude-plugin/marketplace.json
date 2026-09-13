@@ -1,23 +1,23 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
-  "name": "sol-pi",
+  "name": "sol-claudecode",
   "owner": {
-    "name": "SoL-Pi for Claude Code"
+    "name": "SoL-ClaudeCode"
   },
   "metadata": {
-    "description": "SoL-Pi context-efficiency mechanisms for Claude Code: ObservationPack, Evidence-Preserving Reducer, Trajectory Inspector, Action Fusion.",
+    "description": "SoL-ClaudeCode context-efficiency mechanisms: ObservationPack, Evidence-Preserving Reducer, Trajectory Inspector, Action Fusion.",
     "version": "0.1.0"
   },
   "plugins": [
     {
-      "name": "sol-pi",
+      "name": "sol-claudecode",
       "source": "./plugin",
       "version": "0.1.0",
-      "description": "Companion plugin for the SoL-Pi wire gateway. Provides the obs_recall tool that reads back large tool results the gateway replaced with placeholders, a SessionStart gateway health check, and an optional Action Fusion hook.",
+      "description": "Companion plugin for the SoL-ClaudeCode wire gateway. Provides the obs_recall tool that reads back large tool results the gateway replaced with placeholders, a SessionStart gateway health check, and an optional Action Fusion hook.",
       "category": "productivity",
       "tags": ["context", "token-efficiency", "observation-pack"],
       "author": {
-        "name": "SoL-Pi for Claude Code"
+        "name": "SoL-ClaudeCode"
       },
       "license": "MIT"
     }

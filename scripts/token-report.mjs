@@ -3,8 +3,8 @@
  *
  *   node scripts/token-report.mjs [path-to-tokens.jsonl]
  *
- * Prices default to env SOLPI_PRICE_IN / SOLPI_PRICE_OUT (USD per 1M tokens) and
- * SOLPI_PRICE_CACHE_READ (USD per 1M cache-read tokens). They are NOT hardcoded,
+ * Prices default to env SOLCLAUDECODE_PRICE_IN / SOLCLAUDECODE_PRICE_OUT (USD per 1M tokens) and
+ * SOLCLAUDECODE_PRICE_CACHE_READ (USD per 1M cache-read tokens). They are NOT hardcoded,
  * because only you know your model's current pricing.
  */
 
@@ -36,10 +36,10 @@ const outputTokens = sum(usages, "output_tokens");
 const cacheRead = sum(usages, "cache_read_input_tokens");
 const cacheWrite = sum(usages, "cache_creation_input_tokens");
 
-const priceIn = Number(process.env.SOLPI_PRICE_IN || 0);
-const priceOut = Number(process.env.SOLPI_PRICE_OUT || 0);
-const priceCacheRead = Number(process.env.SOLPI_PRICE_CACHE_READ || priceIn * 0.1);
-const priceCacheWrite = Number(process.env.SOLPI_PRICE_CACHE_WRITE || priceIn * 1.25);
+const priceIn = Number(process.env.SOLCLAUDECODE_PRICE_IN || 0);
+const priceOut = Number(process.env.SOLCLAUDECODE_PRICE_OUT || 0);
+const priceCacheRead = Number(process.env.SOLCLAUDECODE_PRICE_CACHE_READ || priceIn * 0.1);
+const priceCacheWrite = Number(process.env.SOLCLAUDECODE_PRICE_CACHE_WRITE || priceIn * 1.25);
 
 const usd = (tokens, pricePerM) => (tokens * pricePerM) / 1_000_000;
 
@@ -82,5 +82,5 @@ if (priceIn > 0) {
 	console.log("        smaller than the cache-free saving whenever packed bytes were cache reads.");
 	console.log("        The cache-free view ignores that discount; it is not an actual bill.");
 } else {
-	console.log("\n(set SOLPI_PRICE_IN / SOLPI_PRICE_OUT to compute cost)");
+	console.log("\n(set SOLCLAUDECODE_PRICE_IN / SOLCLAUDECODE_PRICE_OUT to compute cost)");
 }

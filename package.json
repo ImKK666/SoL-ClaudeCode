@@ -1,13 +1,13 @@
 {
-  "name": "sol-pi-claude-code",
+  "name": "sol-claudecode",
   "version": "0.1.0",
-  "description": "SoL-Pi context-efficiency mechanisms for Claude Code: an api.anthropic.com wire gateway plus a companion plugin.",
+  "description": "SoL-ClaudeCode context-efficiency mechanisms: an api.anthropic.com wire gateway plus a companion plugin.",
   "type": "module",
   "private": true,
   "scripts": {
     "test": "node --test tests/*.test.mjs",
     "vendor": "node scripts/vendor-shared.mjs",
-    "gc": "node scripts/solpi-gc.mjs",
+    "gc": "node scripts/solclaudecode-gc.mjs",
     "gateway": "node gateway/gateway.mjs"
   },
   "engines": {

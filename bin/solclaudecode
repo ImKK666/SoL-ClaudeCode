@@ -1,20 +1,20 @@
 #!/usr/bin/env bash
 # Minimal launcher: bring the gateway up if needed, then run Claude Code through it.
 #
-#   solpi                 # interactive
-#   solpi -p "question"   # one-shot
-#   solpi --plugin-dir ... # extra claude flags pass through
+#   solclaudecode                 # interactive
+#   solclaudecode -p "question"   # one-shot
+#   solclaudecode --plugin-dir ... # extra claude flags pass through
 #
 # The proxy must be a real environment variable: Claude Code only applies the
 # *global* settings.json env block to process.env, and HTTPS_PROXY beats the
 # corporate HTTP_PROXY that block injects.
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-PORT="${SOLPI_GATEWAY_PORT:-8789}"
+PORT="${SOLCLAUDECODE_GATEWAY_PORT:-8789}"
 CA="$ROOT/gateway/ca/ca.pem"
 
 if [ ! -f "$CA" ]; then
-  echo "solpi: CA missing — running install.sh once" >&2
+  echo "solclaudecode: CA missing — running install.sh once" >&2
   "$ROOT/install.sh" >/dev/null
 fi
 
@@ -30,7 +30,7 @@ if ! listening; then
     listening && break
     sleep 0.3
   done
-  listening || { echo "solpi: gateway failed to start on $PORT; see gateway/logs/gateway.stdout.log" >&2; exit 1; }
+  listening || { echo "solclaudecode: gateway failed to start on $PORT; see gateway/logs/gateway.stdout.log" >&2; exit 1; }
 fi
 
 exec env \

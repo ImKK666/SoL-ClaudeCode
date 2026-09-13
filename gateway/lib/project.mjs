@@ -73,8 +73,8 @@ export function createProjector(root = archiveRoot()) {
 	/** @type {Map<string, Promise<void>>} sessionKey -> tail of the serialization chain */
 	const locks = new Map();
 	const reducer = createReducer(loadReducerConfig());
-	const MAX_SESSIONS = Number(process.env.SOLPI_MAX_SESSIONS || 2000);
-	const MAX_OBS_PER_SESSION = Number(process.env.SOLPI_MAX_OBSERVATIONS || 5000);
+	const MAX_SESSIONS = Number(process.env.SOLCLAUDECODE_MAX_SESSIONS || 2000);
+	const MAX_OBS_PER_SESSION = Number(process.env.SOLCLAUDECODE_MAX_OBSERVATIONS || 5000);
 
 	function countsFor(key) {
 		let counts = sendCounts.get(key);

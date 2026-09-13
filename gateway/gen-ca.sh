@@ -9,7 +9,7 @@ set -euo pipefail
 cd "$(dirname "$0")/ca"
 
 openssl req -x509 -newkey rsa:2048 -nodes -keyout ca.key -out ca.pem -days 3650 \
-  -subj "/CN=SoL-Pi Local Probe CA" -addext "basicConstraints=critical,CA:TRUE"
+  -subj "/CN=SoL-ClaudeCode Local Probe CA" -addext "basicConstraints=critical,CA:TRUE"
 
 openssl req -newkey rsa:2048 -nodes -keyout leaf.key -out leaf.csr \
   -subj "/CN=api.anthropic.com" -addext "subjectAltName=DNS:api.anthropic.com"

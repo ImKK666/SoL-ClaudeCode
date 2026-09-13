@@ -1,5 +1,5 @@
 /*
- * SoL-Pi for Claude Code — ObservationPack core (shared contract).
+ * SoL-ClaudeCode — ObservationPack core (shared contract).
  *
  * A faithful port of NVIDIA SoL-Pi's ObservationPack mechanism, adapted from
  * Pi's in-harness `context` projection to the Anthropic Messages wire payload.
@@ -12,7 +12,7 @@
  * Differences from upstream, and why:
  *   - Extraction reads the wire `tool_result` content block, not Pi's
  *     ToolResultMessage. Both content shapes (string | text[] ) are supported.
- *   - The archive is a single content-addressed root (SOLPI_HOME), not a
+ *   - The archive is a single content-addressed root (SOLCLAUDECODE_HOME), not a
  *     per-Pi-session directory. The observation id already embeds the content
  *     hash, so gateway (writer) and plugin/MCP (reader) need no session key to
  *     meet at the same object.
@@ -35,7 +35,7 @@ import { dirname, join } from "node:path";
 /** Only tool results larger than this participate. */
 export const THRESHOLD_BYTES = 10 * 1024;
 /** Provider requests that still carry the full payload before the placeholder takes over. */
-export const FULL_SENDS = process.env.SOLPI_FULL_SENDS ? Number(process.env.SOLPI_FULL_SENDS) : 2;
+export const FULL_SENDS = process.env.SOLCLAUDECODE_FULL_SENDS ? Number(process.env.SOLCLAUDECODE_FULL_SENDS) : 2;
 /** Placeholder excerpt budget, split evenly between head and tail, whole lines only. */
 export const PLACEHOLDER_EXCERPT_BYTES = 1024;
 
@@ -98,7 +98,7 @@ export function isObservationId(id) {
 
 /** Archive root shared by the gateway (writer) and the plugin MCP server (reader). @param {Record<string,string|undefined>} [env] */
 export function archiveRoot(env = process.env) {
-	return env.SOLPI_HOME || join(homedir(), ".sol-pi");
+	return env.SOLCLAUDECODE_HOME || join(homedir(), ".sol-claudecode");
 }
 
 /** @param {string} root @param {string} id */
