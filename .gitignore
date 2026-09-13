@@ -1,0 +1,19 @@
+# dependencies
+node_modules/
+
+# local MITM CA (contains private keys — never commit)
+gateway/ca/
+
+# runtime logs, traffic taps, token accounting, response dumps
+gateway/logs/
+*.log
+
+# local tooling / session state
+.omo/
+.codegraph
+
+# test scratch directories
+tests/.tmp-*
+
+# OS
+.DS_Store

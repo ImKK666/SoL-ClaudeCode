@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+# Minimal launcher: bring the gateway up if needed, then run Claude Code through it.
+#
+#   solpi                 # interactive
+#   solpi -p "question"   # one-shot
+#   solpi --plugin-dir ... # extra claude flags pass through
+#
+# The proxy must be a real environment variable: Claude Code only applies the
+# *global* settings.json env block to process.env, and HTTPS_PROXY beats the
+# corporate HTTP_PROXY that block injects.
+set -euo pipefail
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+PORT="${SOLPI_GATEWAY_PORT:-8789}"
+CA="$ROOT/gateway/ca/ca.pem"
+
+if [ ! -f "$CA" ]; then
+  echo "solpi: CA missing — running install.sh once" >&2
+  "$ROOT/install.sh" >/dev/null
+fi
+
+listening() {
+  if command -v lsof >/dev/null 2>&1; then lsof -nP -iTCP:"$PORT" -sTCP:LISTEN >/dev/null 2>&1
+  else nc -z 127.0.0.1 "$PORT" >/dev/null 2>&1; fi
+}
+
+if ! listening; then
+  mkdir -p "$ROOT/gateway/logs"
+  nohup node "$ROOT/gateway/gateway.mjs" "$PORT" >"$ROOT/gateway/logs/gateway.stdout.log" 2>&1 &
+  for _ in 1 2 3 4 5 6 7 8 9 10; do
+    listening && break
+    sleep 0.3
+  done
+  listening || { echo "solpi: gateway failed to start on $PORT; see gateway/logs/gateway.stdout.log" >&2; exit 1; }
+fi
+
+exec env \
+  NODE_EXTRA_CA_CERTS="$CA" \
+  HTTPS_PROXY="http://127.0.0.1:$PORT" \
+  HTTP_PROXY="http://127.0.0.1:$PORT" \
+  NO_PROXY="localhost,127.0.0.1" no_proxy="localhost,127.0.0.1" \
+  claude "$@"

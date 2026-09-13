@@ -1,0 +1,17 @@
+{
+  "name": "sol-pi-claude-code",
+  "version": "0.1.0",
+  "description": "SoL-Pi context-efficiency mechanisms for Claude Code: an api.anthropic.com wire gateway plus a companion plugin.",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "vendor": "node scripts/vendor-shared.mjs",
+    "gc": "node scripts/solpi-gc.mjs",
+    "gateway": "node gateway/gateway.mjs"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "license": "MIT"
+}

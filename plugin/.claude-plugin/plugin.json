@@ -1,0 +1,8 @@
+{
+  "name": "sol-pi",
+  "version": "0.1.0",
+  "description": "SoL-Pi context efficiency for Claude Code. The wire gateway replaces large tool results with a stable, recallable placeholder; this plugin provides the obs_recall tool that reads them back exactly.",
+  "author": {
+    "name": "SoL-Pi for Claude Code"
+  }
+}

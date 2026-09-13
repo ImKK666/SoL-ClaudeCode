@@ -1,0 +1,28 @@
+{
+  "description": "SoL-Pi for Claude Code — ObservationPack gateway health check, plus optional Action Fusion after edits",
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hooks/session-start.sh\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit|NotebookEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hooks/post-tool-use.sh\"",
+            "timeout": 60
+          }
+        ]
+      }
+    ]
+  }
+}
